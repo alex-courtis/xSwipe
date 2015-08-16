@@ -3,6 +3,16 @@ xSwipe
 xSwipe is multitouch gesture recognizer.
 This script make your linux PC able to recognize swipes like a Macbook.
 
+## Fork Details
+
+Don't start syndaemon
+
+Don't attempt session detection
+
+Don't override ClickFinger3 or TapButton3
+
+Use mouseclicks instead of keyboard shortcuts
+
 ## Usage
 
 Before running the script, you must first do some preparations.

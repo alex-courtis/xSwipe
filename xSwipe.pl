@@ -59,7 +59,7 @@ while(my $ARGV = shift){
     }
 }
 # add syndaemon setting
-system("syndaemon -m 10 -i 0.5 -K -t -d &");
+#system("syndaemon -m 10 -i 0.5 -K -t -d &");
 
 open (Scroll_setting, "synclient -l | grep ScrollDelta | grep -v -e Circ | ")or die "can't synclient -l";
 my @Scroll_setting = <Scroll_setting>;
@@ -103,19 +103,20 @@ my $innerEdgeBottom = $BottomEdge - $yMinThreshold;
 #load config
 my $script_dir = $FindBin::Bin;#CurrentPath
 my $conf = require $script_dir."/".$confFileName;
-open (fileHundle, "pgrep -lf ^gnome-session |")or die "can't pgrep -lf ^gnome-session";
-my @data = <fileHundle>;
-my $sessionName = (split "session=", $data[0])[1];
-close(fileHundle);
-chomp($sessionName);
-# If $session_name is empty (gnome-session doesn't work), try to find it with $DESKTOP_SESSION
-if (not length $sessionName){
-    open (desktopSession, 'echo $DESKTOP_SESSION |')or die 'can\'t echo $DESKTOP_SESSION';
-    $sessionName = <desktopSession>;
-    close(desktopSession);
-    chomp($sessionName);
-}
-$sessionName = ("$sessionName" ~~ $conf) ? "$sessionName" : 'other';
+#open (fileHundle, "pgrep -lf ^gnome-session |")or die "can't pgrep -lf ^gnome-session";
+#my @data = <fileHundle>;
+#my $sessionName = (split "session=", $data[0])[1];
+#close(fileHundle);
+#chomp($sessionName);
+## If $session_name is empty (gnome-session doesn't work), try to find it with $DESKTOP_SESSION
+#if (not length $sessionName){
+#    open (desktopSession, 'echo $DESKTOP_SESSION |')or die 'can\'t echo $DESKTOP_SESSION';
+#    $sessionName = <desktopSession>;
+#    close(desktopSession);
+#    chomp($sessionName);
+#}
+#$sessionName = ("$sessionName" ~~ $conf) ? "$sessionName" : 'other';
+my $sessionName = 'mouse';
 ### $sessionName
 
 my @swipe3Right = split "/", ($conf->{$sessionName}->{swipe3}->{right});
@@ -309,8 +310,9 @@ while(my $line = <INFILE>){
         if( abs($time - $eventTime) > 0.2 ){
             ### $time - $eventTime got: $time - $eventTime
             $eventTime = $time;
-            PressKey $_ foreach(@eventString);
-            ReleaseKey $_ foreach(reverse @eventString);
+            ClickMouseButton $_ foreach(@eventString);
+            # PressKey $_ foreach(@eventString);
+            # ReleaseKey $_ foreach(reverse @eventString);
             ### @eventString
         }# if enough time has passed
         @eventString = ("default");
@@ -325,9 +327,11 @@ sub initSynclient{
     my $naturalScroll = $_[0];
     if($naturalScroll == 1){
         $confFileName = $nScrollConfFileName;
-        `synclient VertScrollDelta=-$VertScrollDelta HorizScrollDelta=-$HorizScrollDelta ClickFinger3=1 TapButton3=2`;
+        #`synclient VertScrollDelta=-$VertScrollDelta HorizScrollDelta=-$HorizScrollDelta ClickFinger3=1 TapButton3=2`;
+        `synclient VertScrollDelta=-$VertScrollDelta HorizScrollDelta=-$HorizScrollDelta`;
     }else{
-        `synclient VertScrollDelta=$VertScrollDelta HorizScrollDelta=$HorizScrollDelta ClickFinger3=1 TapButton3=2`;
+        #`synclient VertScrollDelta=$VertScrollDelta HorizScrollDelta=$HorizScrollDelta ClickFinger3=1 TapButton3=2`;
+        `synclient VertScrollDelta=$VertScrollDelta HorizScrollDelta=$HorizScrollDelta`;
     }
 }
 
